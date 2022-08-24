@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="content">
+        <!--<h1 class="aw-page-title">Título da sua página</h1>-->
+
+        <p:panel id="painel_conteudo" header="Telefone" >
+            <p:messages id="messages" showDetail="true" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+            <p:tabView id="tab_view" activeIndex="#{telefoneC.aba}">
+                <p:tab title="Pesquisa">
+                    <h:form id="form_pesquisa">
+
+
+
+                        <p:panelGrid id="panelGG" columns="4" layout="flex" 
+                                     columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2"
+                                     contentStyleClass="ui-fluid">
+                            <p:outputLabel for="telefone" value="Número:" />
+                            <p:inputText id="telefone" value="#{telefoneC.telefone.numero}"  required="true" 
+                                         requiredMessage="Número é obrigatório" />
+                            <p:commandButton value="Pesquisar" 
+                                             actionListener="#{telefoneC.pesquisar()}"
+                                             update="tabela telefone"  />
+                        </p:panelGrid>
+
+                        <p:dataTable id="tabela" var="tel" value="#{telefoneC.telefones}" rows="10"
+                                     paginator="true" paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                     rowsPerPageTemplate="5,10,15,{ShowAll|'Todos'}">
+                            <p:column headerText="Número">
+                                <h:outputText value="#{tel.numero}" />                              
+                            </p:column>
+                            <p:column headerText="Operadora">
+                                <h:outputText value="#{tel.operadora}" />
+                            </p:column>   
+                            
+                            <p:column headerText="Descrição">
+                                <h:outputText value="#{tel.descricao}" />
+                            </p:column>  
+                            
+                            <p:column headerText="Contato">
+                                <h:outputText value="#{tel.contato}" />
+                            </p:column>  
+
+
+                            <p:column headerText="Ação">
+                                <p:commandButton icon="pi pi-pencil" title="Alterar" process="@this" 
+                                                 actionListener="#{telefoneC.prepararAlterar}" update="@all"
+                                                 style="margin-right: 12px" styleClass="rounded-button ui-button-outlined" />
+
+                                <p:commandButton icon="pi pi-trash" title="Excluir" process="@this"
+                                                 actionListener="#{telefoneC.excluir}" update="tabela"
+                                                 styleClass="rounded-button ui-button-outlined" >
+                                    <p:confirm header="Confirmação" message="Deseja realmente excluir?" icon="pi pi-info-circle"/>
+                                </p:commandButton>
+                            </p:column>                       
+
+                        </p:dataTable>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" />
+                        </p:confirmDialog>
+
+                    </h:form>
+                </p:tab>
+
+                <!--aba para cadastrar e alterar-->
+                <p:tab title="Novo">
+                    <h:form id="form_novo">
+                        <p:panelGrid columns="3" layout="flex"
+                                     columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-10"
+                                     contentStyleClass="ui-fluid">
+                             <p:outputLabel for="numero" value="Telefone:" />
+                            <p:inputText id="numero" value="#{telefoneC.telefone.numero}"
+                                         required="true" 
+                                         requiredMessage="Telefone é obrigatório!" />
+                            
+                            
+                             <p:outputLabel for="operadora" value="Operadora: " />
+                             <p:selectOneMenu id="operadora" value="#{telefoneC.telefone.operadora}" required="true" 
+                                         requiredMessage="Operadora é obrigatório!">
+                                 
+                                <f:selectItem itemLabel="Selecione uma operadora:" itemValue=""/> 
+                                <f:selectItem itemLabel="Claro" itemValue="Claro celular"/>
+                                <f:selectItem itemLabel="TIM" itemValue="TIM celular"/>
+                                <f:selectItem itemLabel="Vivo" itemValue="Vivo celular"/>
+                                <f:selectItem itemLabel="Oi" itemValue="Oi celular"/>
+                                <f:selectItem itemLabel="Nextel" itemValue="Nextel celular"/>
+                                
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="descricao" value="Descrição:" />
+                            <p:inputTextarea id="descricao" 
+                                             value="#{telefoneC.telefone.descricao}" />
+                             
+                            <p:outputLabel for="contato" value="Contato:" />
+                            <p:inputTextarea id="contato" 
+                                             value="#{telefoneC.telefone.contato}" required="true" 
+                                         requiredMessage="Contato é obrigatório!"/>
+
+                            
+                            
+                            <!--primeira coluna-->
+                            <p:commandButton value="Salvar" 
+                                             actionListener="#{telefoneC.salvar()}"
+                                             update="@all"  />
+                        </p:panelGrid>
+                    </h:form>
+                </p:tab>
+
+            </p:tabView>
+        </p:panel> 
+    </ui:define>
+
+</ui:composition>
